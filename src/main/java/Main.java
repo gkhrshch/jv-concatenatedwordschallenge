@@ -3,16 +3,25 @@ import concatenatedwordschallenge.util.TaskFileReader;
 
 import org.apache.log4j.Logger;
 
+import java.util.Scanner;
+
 public class Main {
 
-    private static Logger logger = Logger.getLogger(Main.class);
+    private static final Logger     LOGGER     = Logger.getLogger(Main.class);
 
-    private static final String FILE_NAME = "words.txt";
+    private static String           fileName;
+
+    static {
+        LOGGER.warn("Input file name, please");
+        try (Scanner scanner = new Scanner(System.in)) {
+            fileName = scanner.nextLine();
+        }
+    }
 
     public static void main(String[] args) {
 
-        TaskFileReader taskFileReader = new TaskFileReader(FILE_NAME);
+        TaskFileReader taskFileReader = new TaskFileReader(fileName);
         InitialWordsProcessor initialWordsProcessor = new InitialWordsProcessor(taskFileReader);
-        logger.debug(initialWordsProcessor.getWordsWithLengths());
+        LOGGER.debug(initialWordsProcessor.getWordsWithLengths());
     }
 }

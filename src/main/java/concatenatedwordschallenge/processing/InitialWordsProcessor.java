@@ -9,12 +9,12 @@ import java.util.Map;
 
 public class InitialWordsProcessor {
 
-    private List<String> words;
+    private final List<String> words;
 
-    private Map<Integer, List<String>> wordsWithLengths;
+    private final Map<Integer, List<String>> wordsWithLengths;
 
     public InitialWordsProcessor(TaskFileReader taskFileReader) {
-        this.words = new ArrayList<>(taskFileReader.getWords());
+        this.words = taskFileReader.getWords();
         this.wordsWithLengths = groupWordsByLengths();
     }
 
@@ -31,6 +31,6 @@ public class InitialWordsProcessor {
     }
 
     public Map<Integer, List<String>> getWordsWithLengths() {
-        return wordsWithLengths;
+        return new HashMap(wordsWithLengths);
     }
 }
