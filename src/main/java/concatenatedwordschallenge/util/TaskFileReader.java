@@ -6,14 +6,15 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.List;
 
 
 public class TaskFileReader {
 
-    private static Logger logger = Logger.getLogger(TaskFileReader.class);
+    private static final Logger LOGGER = Logger.getLogger(TaskFileReader.class);
 
-    private List<String> words;
+    private final List<String> words;
 
     public TaskFileReader (String fileName) {
         this.words = getWordsFromFile(getPathToResourcesFile(fileName));
@@ -24,7 +25,7 @@ public class TaskFileReader {
         try {
             wordsFromFile = Files.readString(Paths.get(path));
         } catch (IOException e) {
-            logger.error(e);
+            LOGGER.error("Could not read file by path: " + path, e);
         }
         return List.of(wordsFromFile.split(" "));
     }
@@ -41,6 +42,6 @@ public class TaskFileReader {
     }
 
     public List<String> getWords() {
-        return words;
+        return new ArrayList<>(words);
     }
 }
