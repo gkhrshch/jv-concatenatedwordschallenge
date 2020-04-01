@@ -9,17 +9,15 @@ import java.util.Map;
 
 public class InitialWordsProcessor {
 
-    private final List<String> words;
-
-    private final Map<Integer, List<String>> wordsWithLengths;
+    private final TaskFileReader taskFileReader;
 
     public InitialWordsProcessor(TaskFileReader taskFileReader) {
-        this.words = taskFileReader.getWords();
-        this.wordsWithLengths = groupWordsByLengths();
+        this.taskFileReader = taskFileReader;
     }
 
-    private Map<Integer, List<String>> groupWordsByLengths() {
+    public Map<Integer, List<String>> getWordsWithLengths() {
         Map<Integer, List<String>> wordsByLengths = new HashMap<>();
+        List<String> words = taskFileReader.getWordsFromFile();
         int longestWordLength = words.get(words.size() - 1).length();
         for (int i = 1; i <= longestWordLength; i++) {
             wordsByLengths.put(i, new ArrayList<>());
@@ -28,9 +26,5 @@ public class InitialWordsProcessor {
             wordsByLengths.get(word.length()).add(word);
         }
         return wordsByLengths;
-    }
-
-    public Map<Integer, List<String>> getWordsWithLengths() {
-        return new HashMap(wordsWithLengths);
     }
 }

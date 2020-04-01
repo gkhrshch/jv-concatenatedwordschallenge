@@ -6,21 +6,20 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.ArrayList;
 import java.util.List;
-
 
 public class TaskFileReader {
 
     private static final Logger LOGGER = Logger.getLogger(TaskFileReader.class);
 
-    private final List<String> words;
+    private final String fileName;
 
     public TaskFileReader (String fileName) {
-        this.words = getWordsFromFile(getPathToResourcesFile(fileName));
+        this.fileName = fileName;
     }
 
-    private List<String> getWordsFromFile(String path) {
+    public List<String> getWordsFromFile() {
+        String path = getPathToResourcesFile();
         String wordsFromFile = "";
         try {
             wordsFromFile = Files.readString(Paths.get(path));
@@ -35,13 +34,9 @@ public class TaskFileReader {
      * For some reason, Files.read() method can not directly access file from resources folder
      * so, had to implement this method for obtaining direct path to task file
      */
-    private String getPathToResourcesFile(String filename) {
+    private String getPathToResourcesFile() {
         ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
-        File file = new File(classLoader.getResource(filename).getFile());
+        File file = new File(classLoader.getResource(fileName).getFile());
         return file.getAbsolutePath();
-    }
-
-    public List<String> getWords() {
-        return new ArrayList<>(words);
     }
 }

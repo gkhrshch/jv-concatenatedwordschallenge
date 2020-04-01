@@ -1,4 +1,5 @@
 import concatenatedwordschallenge.processing.InitialWordsProcessor;
+import concatenatedwordschallenge.processing.WordLengthsCombinator;
 import concatenatedwordschallenge.util.TaskFileReader;
 
 import org.apache.log4j.Logger;
@@ -22,6 +23,7 @@ public class Main {
 
         TaskFileReader taskFileReader = new TaskFileReader(fileName);
         InitialWordsProcessor initialWordsProcessor = new InitialWordsProcessor(taskFileReader);
-        LOGGER.debug(initialWordsProcessor.getWordsWithLengths());
+        WordLengthsCombinator wordLengthsCombinator = new WordLengthsCombinator(initialWordsProcessor);
+        LOGGER.debug(wordLengthsCombinator.getLengthCombinations());
     }
 }
