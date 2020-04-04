@@ -1,7 +1,6 @@
 package concatenatedwordschallenge.processing;
 
 import concatenatedwordschallenge.util.TaskFileReader;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -15,9 +14,9 @@ public class InitialWordsProcessor {
         this.taskFileReader = taskFileReader;
     }
 
-    public Map<Integer, List<String>> getWordsWithLengths() {
+    public Map<Integer, List<String>> getWordsWithLengths(String fileName) {
         Map<Integer, List<String>> wordsByLengths = new HashMap<>();
-        List<String> words = taskFileReader.getWordsFromFile();
+        List<String> words = taskFileReader.getWordsFromFile(fileName);
         int longestWordLength = words.get(words.size() - 1).length();
         for (int i = 1; i <= longestWordLength; i++) {
             wordsByLengths.put(i, new ArrayList<>());

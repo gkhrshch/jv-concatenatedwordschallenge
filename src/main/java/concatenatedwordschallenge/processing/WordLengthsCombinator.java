@@ -14,53 +14,85 @@ public class WordLengthsCombinator {
         this.initialWordsProcessor = initialWordsProcessor;
     }
 
-    private Map<Integer, List<Integer>> getGreaterLengthsWithLesserLengths() {
+    private Map<Integer, List<Integer>> getGreaterLengthsWithLesserLengths(String fileName) {
         Map<Integer, List<Integer>> greaterLengthsWithLesserLengths = new HashMap<>();
-        Set<Integer> possibleLengths = initialWordsProcessor.getWordsWithLengths().keySet();
+        Set<Integer> possibleLengths = initialWordsProcessor.getWordsWithLengths(fileName).keySet();
         List<Integer> possibleLengthsList = new ArrayList<>(possibleLengths);
-        for (int numberWithGreaterLengthIndex = possibleLengthsList.size() - 1; numberWithGreaterLengthIndex > 0; numberWithGreaterLengthIndex--) {
+        for (int numberWithGreaterLengthIndex = possibleLengthsList.size() - 1;
+                numberWithGreaterLengthIndex > 0; numberWithGreaterLengthIndex--) {
             int numberWithGreaterLength = possibleLengthsList.get(numberWithGreaterLengthIndex);
             greaterLengthsWithLesserLengths.put(numberWithGreaterLength, new ArrayList<>());
-            for (int numberWithLesserLengthIndex = 0; numberWithLesserLengthIndex < numberWithGreaterLengthIndex; numberWithLesserLengthIndex++ ) {
-                greaterLengthsWithLesserLengths.get(numberWithGreaterLength).add(possibleLengthsList.get(numberWithLesserLengthIndex));
+            for (int numberWithLesserLengthIndex = 0;
+                    numberWithLesserLengthIndex < numberWithGreaterLengthIndex;
+                    numberWithLesserLengthIndex++) {
+                greaterLengthsWithLesserLengths.get(numberWithGreaterLength)
+                        .add(possibleLengthsList.get(numberWithLesserLengthIndex));
             }
         }
         return greaterLengthsWithLesserLengths;
     }
 
-    public List<List<Integer>> getLengthCombinations() {
+    public List<List<Integer>> getUniqueLengthCombinations(String fileName) {
         List<List<Integer>> lengthCombinations = new ArrayList<>();
-        Map<Integer, List<Integer>> greaterLengthsWithLesserLengths = getGreaterLengthsWithLesserLengths();
+        Map<Integer, List<Integer>> greaterLengthsWithLesserLengths
+                    = getGreaterLengthsWithLesserLengths(fileName);
         for (Map.Entry<Integer, List<Integer>> entry : greaterLengthsWithLesserLengths.entrySet()) {
             List<List<Integer>> combinationsFromEntry = new ArrayList<>();
-            writeSumCombinations(entry.getValue(), entry.getKey(), new ArrayList<>(), combinationsFromEntry);
+            writeSumCombinations(entry.getValue(), entry.getKey(),
+                    combinationsFromEntry, 0, new ArrayList<>());
             lengthCombinations.addAll(combinationsFromEntry);
         }
         return lengthCombinations;
     }
 
-    /**
-     *
-     * Does not return variants with duplicating numbers atm, e.g [1, 1, 1] for 3 etc.
-     */
-    private void writeSumCombinations(List<Integer> numbersToCheck, int sum, List<Integer> partial, List<List<Integer>> result) {
-        int s = 0;
-        for (int x: partial) {
-            s += x;
-        }
-        if (s == sum) {
-            result.add(partial);
-        }
-        if (s >= sum) {
+    private void writeSumCombinations(List<Integer> numbersToCheck, int sum,
+                                      List<List<Integer>> result,
+                                      int currentSum, List<Integer> currentCombination) {
+        if (currentSum > sum) {
             return;
         }
-        for (int i=0; i<numbersToCheck.size(); i++) {
-            ArrayList<Integer> remaining = new ArrayList<>();
-            int n = numbersToCheck.get(i);
-            for (int j=i+1; j<numbersToCheck.size();j++) remaining.add(numbersToCheck.get(j));
-            ArrayList<Integer> partialRecursive = new ArrayList<>(partial);
-            partialRecursive.add(n);
-            writeSumCombinations(remaining, sum, partialRecursive, result);
+        if (currentSum == sum) {
+            result.add(new ArrayList<>(currentCombination));
+            return;
         }
+        for (int i = 0; i < numbersToCheck.size(); i++) {
+            currentCombination.add(numbersToCheck.get(i));
+            writeSumCombinations(numbersToCheck, sum, result,
+                    currentSum + numbersToCheck.get(i), currentCombination);
+            currentCombination.remove(currentCombination.size() - 1);
+        }
+    }
+
+    public List<List<Integer>> getLengthCombinationsWithPermutations(String fileName) {
+        List<List<Integer>> uniqueLengthCombinations = getUniqueLengthCombinations(fileName);
+        List<List<Integer>> lengthCombinationsWithPermutations = new ArrayList<>();
+        for (List<Integer> combination : uniqueLengthCombinations) {
+            List<List<Integer>> permutations = new ArrayList<>();
+            writeAllPermutations(combination.size(), combination, permutations);
+            lengthCombinationsWithPermutations.addAll(permutations);
+        }
+        return lengthCombinationsWithPermutations;
+    }
+
+    private void writeAllPermutations(int n, List<Integer> numbers, List<List<Integer>> result) {
+        if (n == 1) {
+            result.add(new ArrayList<>(numbers));
+        } else {
+            for (int i = 0; i < n - 1; i++) {
+                writeAllPermutations(n - 1, numbers, result);
+                if (n % 2 == 0) {
+                    swap(numbers, i, n - 1);
+                } else {
+                    swap(numbers, 0, n - 1);
+                }
+            }
+            writeAllPermutations(n - 1, numbers, result);
+        }
+    }
+
+    private void swap(List<Integer> input, int a, int b) {
+        int toSwap = input.get(a);
+        input.set(a, input.get(b));
+        input.set(b, toSwap);
     }
 }

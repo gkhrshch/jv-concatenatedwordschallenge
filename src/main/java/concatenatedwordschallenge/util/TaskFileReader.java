@@ -1,25 +1,21 @@
 package concatenatedwordschallenge.util;
 
-import org.apache.log4j.Logger;
-
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.List;
+import org.apache.log4j.Logger;
 
 public class TaskFileReader {
 
     private static final Logger LOGGER = Logger.getLogger(TaskFileReader.class);
 
-    private final String fileName;
-
-    public TaskFileReader (String fileName) {
-        this.fileName = fileName;
+    public TaskFileReader() {
     }
 
-    public List<String> getWordsFromFile() {
-        String path = getPathToResourcesFile();
+    public List<String> getWordsFromFile(String fileName) {
+        String path = getPathToResourcesFile(fileName);
         String wordsFromFile = "";
         try {
             wordsFromFile = Files.readString(Paths.get(path));
@@ -29,12 +25,11 @@ public class TaskFileReader {
         return List.of(wordsFromFile.split(" "));
     }
 
-
     /**
      * For some reason, Files.read() method can not directly access file from resources folder
      * so, had to implement this method for obtaining direct path to task file
      */
-    private String getPathToResourcesFile() {
+    private String getPathToResourcesFile(String fileName) {
         ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
         File file = new File(classLoader.getResource(fileName).getFile());
         return file.getAbsolutePath();
