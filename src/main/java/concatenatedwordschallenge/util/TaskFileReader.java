@@ -20,7 +20,7 @@ public class TaskFileReader {
         try {
             wordsFromFile = Files.readString(Paths.get(path));
         } catch (IOException e) {
-            LOGGER.error("Could not read file by path: " + path, e);
+            throw new RuntimeException("Could not read file by path: " + path, e);
         }
         return List.of(wordsFromFile.split(" "));
     }

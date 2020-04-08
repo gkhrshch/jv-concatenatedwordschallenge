@@ -1,6 +1,8 @@
-import concatenatedwordschallenge.processing.InitialWordsProcessor;
-import concatenatedwordschallenge.processing.WordLengthsCombinator;
+import concatenatedwordschallenge.model.WordInfo;
+import concatenatedwordschallenge.processing.WordService;
 import concatenatedwordschallenge.util.TaskFileReader;
+
+import java.util.List;
 import java.util.Scanner;
 import org.apache.log4j.Logger;
 
@@ -10,21 +12,16 @@ public class Main {
 
     private static String fileName;
 
-    static {
+    public static void main(String[] args) {
+
         LOGGER.info("Input file name, please");
         try (Scanner scanner = new Scanner(System.in)) {
             fileName = scanner.nextLine();
         }
-    }
 
-    public static void main(String[] args) {
-
-        TaskFileReader taskFileReader = new TaskFileReader();
-        InitialWordsProcessor initialWordsProcessor = new InitialWordsProcessor(taskFileReader);
-        WordLengthsCombinator wordLengthsCombinator
-                = new WordLengthsCombinator(initialWordsProcessor);
-        long timeBeforeCalculation = System.currentTimeMillis();
-        LOGGER.debug(wordLengthsCombinator.getLengthCombinationsWithPermutations(fileName));
-        LOGGER.debug(System.currentTimeMillis() - timeBeforeCalculation);
+        List<String> words = new TaskFileReader().getWordsFromFile(fileName);
+        WordService wordService = new WordService();
+        WordInfo wordInfo = wordService.getWordInfo();
+        LOGGER.info(wordInfo.toString());
     }
 }
