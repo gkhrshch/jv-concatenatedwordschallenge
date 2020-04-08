@@ -10,10 +10,9 @@ public class Main {
 
     private static final Logger LOGGER = Logger.getLogger(Main.class);
 
-    private static String fileName;
-
     public static void main(String[] args) {
 
+        String fileName;
         LOGGER.info("Input file name, please");
         try (Scanner scanner = new Scanner(System.in)) {
             fileName = scanner.nextLine();
