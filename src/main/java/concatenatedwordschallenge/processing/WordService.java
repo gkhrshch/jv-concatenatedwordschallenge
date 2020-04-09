@@ -9,12 +9,11 @@ import java.util.Set;
 
 public class WordService {
 
-    private WordInfo wordInfo = new WordInfo();
-
     public WordService() {
     }
 
     public WordInfo getWordInfo() {
+        WordInfo wordInfo = new WordInfo();
         //TODO: concatenated words identification logic
         return wordInfo;
     }
